@@ -38,6 +38,7 @@ public class OceanWorldsOptions {
 	private static ConfigValue<Integer> oceanScale;
 	private static ConfigValue<Integer> oceanLavaHeight;
 	private static ConfigValue<Integer> oceanLavaScale;
+	private static ConfigValue<Boolean> floodCaves;
 	private static ForgeConfigSpec config;
 
 	public static void init() {
@@ -46,6 +47,7 @@ public class OceanWorldsOptions {
 		oceanScale = builder.comment("Ocean Scale").define("oceanworlds.scale.ocean", 1);
 		oceanLavaHeight = builder.comment("Lava Ocean Height").define("oceanworlds.height.lava", 32);
 		oceanLavaScale = builder.comment("Lava Ocean Scale").define("oceanworlds.scale.lava", 10);
+		floodCaves = builder.comment("Flood Caves").define("oceanworlds.flood_caves", true);
 
 		GeneralSettings.config(builder);
 		FractalSettings.config(builder);
@@ -83,4 +85,5 @@ public class OceanWorldsOptions {
 		return oceanLavaScale.get();
 	}
 
+	public static boolean shouldFloodCaves() { return floodCaves.get(); }
 }

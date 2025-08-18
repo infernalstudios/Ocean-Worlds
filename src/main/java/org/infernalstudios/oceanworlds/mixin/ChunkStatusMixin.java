@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Function;
 
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.fml.ModList;
 import org.infernalstudios.oceanworlds.OceanWorlds;
 import org.infernalstudios.oceanworlds.compat.ValkyrienSkiesCompat;
@@ -21,10 +22,7 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.mojang.datafixers.util.Either;
-
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ThreadedLevelLightEngine;
 import net.minecraft.server.level.WorldGenRegion;
@@ -81,7 +79,9 @@ public class ChunkStatusMixin {
 							double extra = (noise
 								.GetNoise(noisePos.getX(), noisePos.getZ(), worldgenregion.getSeed() ^ ~2) + 1) * scale;
 
-							for (int y = chunk.getMinBuildHeight(); y <= height + (int) Math.ceil(extra); y++) {
+							int miny = OceanWorldsOptions.shouldFloodCaves() ? chunk.getMinBuildHeight()
+									: chunk.getHeight(Heightmap.Types.WORLD_SURFACE, noisePos.getX(), noisePos.getZ());
+							for (int y = miny; y <= height + (int) Math.ceil(extra); y++) {
 								BlockPos pos = noisePos.above(y);
 								BlockState state = worldgenregion.getBlockState(pos);
 
