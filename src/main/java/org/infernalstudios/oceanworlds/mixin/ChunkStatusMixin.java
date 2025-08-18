@@ -56,10 +56,10 @@ public class ChunkStatusMixin {
 
 				if (level.dimension().equals(Level.OVERWORLD) || level.dimension().equals(Level.NETHER)) {
 					BlockState defaultFluid = noiseChunkGenerator.getSettings().value().defaultFluid();
-					int height = !defaultFluid.is(Blocks.WATER) ? OceanWorldsOptions.getOceanLavaHeight()
-							: OceanWorldsOptions.getOceanHeight();
-					int scale = !defaultFluid.is(Blocks.WATER) ? OceanWorldsOptions.getOceanLavaScale()
-							: OceanWorldsOptions.getOceanScale();
+					int height = defaultFluid.is(Blocks.WATER) ? OceanWorldsOptions.getOceanHeight()
+							: OceanWorldsOptions.getOceanLavaHeight();
+					int scale = defaultFluid.is(Blocks.WATER) ? OceanWorldsOptions.getOceanScale()
+							: OceanWorldsOptions.getOceanLavaScale();
 					WorldGenRegion worldgenregion = new WorldGenRegion(level, chunks, chunkStatus, 1);
 					FastNoiseSampler noise = new FastNoiseSampler(GeneralSettings.get(), FractalSettings.get(),
 						CellularSettings.get(), DomainWarpSettings.get(), DomainWarpFractalSettings.get());
@@ -69,6 +69,10 @@ public class ChunkStatusMixin {
 						fillChunk = ValkyrienSkiesCompat.shouldFillChunkWithWater(chunk, level);
 					}
 					if (!fillChunk) return;
+
+					BlockState fluid = defaultFluid.is(Blocks.WATER)
+							? OceanWorlds.FALSE_WATER.get().defaultBlockState()
+							: OceanWorlds.FALSE_LAVA.get().defaultBlockState();
 
 					for (int x = 0; x < 16; x++) {
 
@@ -80,9 +84,6 @@ public class ChunkStatusMixin {
 							for (int y = chunk.getMinBuildHeight(); y <= height + (int) Math.ceil(extra); y++) {
 								BlockPos pos = noisePos.above(y);
 								BlockState state = worldgenregion.getBlockState(pos);
-								BlockState fluid = defaultFluid.is(Blocks.WATER)
-										? OceanWorlds.FALSE_WATER.get().defaultBlockState()
-										: OceanWorlds.FALSE_LAVA.get().defaultBlockState();
 
 								if ((y + 1) > height + Math.ceil(extra)) {
 									int val = 8 - (int) Math.floor((extra % 1) * 8.0D);
@@ -95,6 +96,7 @@ public class ChunkStatusMixin {
 
 								}
 
+								//OceanWorlds.LOGGER.info(state.is(Blocks.CAVE_AIR));
 								if (state.is(Blocks.AIR) || ((FlowingFluidAccessor) liquid.getFluid())
 									.callCanHoldFluid(worldgenregion, pos, state,
 										liquid.getFluid()) || state.is(defaultFluid.getBlock())) {
@@ -105,19 +107,11 @@ public class ChunkStatusMixin {
 										.setBlock(pos, state.setValue(BlockStateProperties.WATERLOGGED, true),
 											Block.UPDATE_NONE, 0);
 								}
-
 							}
-
 						}
-
 					}
-
 				}
-
 			}
-
 		}
-
 	}
-
 }

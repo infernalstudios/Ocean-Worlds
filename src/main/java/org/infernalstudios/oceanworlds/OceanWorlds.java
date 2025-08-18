@@ -34,29 +34,29 @@ import net.minecraftforge.registries.RegistryObject;
 
 @Mod("oceanworlds")
 public class OceanWorlds {
-
 	public static final String NAME = "Ocean Worlds";
 	public static final String MOD_ID = "oceanworlds";
+
 	public static final Logger LOGGER = LogManager.getLogger(NAME);
+	
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 	public static final RegistryObject<Block> FALSE_WATER = BLOCKS.register("false_water",
-			() -> new NonFlowingLiquidBlock(() -> Fluids.WATER, BlockBehaviour.Properties.of().noCollission().strength(100.0F).noLootTable(), Blocks.WATER));
+			() -> new NonFlowingLiquidBlock(() -> Fluids.WATER, BlockBehaviour.Properties.copy(Blocks.WATER).noCollission().strength(100.0F).noLootTable(), Blocks.WATER));
 	public static final RegistryObject<Block> FALSE_LAVA = BLOCKS.register("false_lava", () -> new NonFlowingLiquidBlock(() -> Fluids.LAVA,
-			BlockBehaviour.Properties.of().noCollission().randomTicks().strength(100.0F).lightLevel((p_50755_) -> 15).noLootTable(), Blocks.LAVA));
+			BlockBehaviour.Properties.copy(Blocks.LAVA).noCollission().randomTicks().strength(100.0F).lightLevel((p_50755_) -> 15).noLootTable(), Blocks.LAVA));
 	public static final RegistryObject<Block> FULL_WATER = BLOCKS.register("full_water",
-			() -> new FullWaterBlock(() -> Fluids.WATER, BlockBehaviour.Properties.of().noCollission().strength(100.0F).noLootTable(), Blocks.WATER));
+			() -> new FullWaterBlock(() -> Fluids.WATER, BlockBehaviour.Properties.copy(Blocks.WATER).noCollission().strength(100.0F).noLootTable(), Blocks.WATER));
 
 	public OceanWorlds() {
 		OceanWorldsOptions.init();
 
 		for (DyeColor dye : DyeColor.values()) {
 			BLOCKS.register(dye.getName() + "_false_water",
-					() -> new NonFlowingLiquidBlock(() -> Fluids.WATER, BlockBehaviour.Properties.of().noCollission().strength(100.0F).noLootTable(), Blocks.WATER));
+					() -> new NonFlowingLiquidBlock(() -> Fluids.WATER, BlockBehaviour.Properties.copy(Blocks.WATER).noCollission().strength(100.0F).noLootTable(), Blocks.WATER));
 			BLOCKS.register(dye.getName() + "_full_water",
-					() -> new FullWaterBlock(() -> Fluids.WATER, BlockBehaviour.Properties.of().noCollission().strength(100.0F).noLootTable(), Blocks.WATER));
+					() -> new FullWaterBlock(() -> Fluids.WATER, BlockBehaviour.Properties.copy(Blocks.WATER).noCollission().strength(100.0F).noLootTable(), Blocks.WATER));
 		}
 
 		BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
 	}
-
 }
