@@ -79,9 +79,7 @@ public class ChunkStatusMixin {
 							double extra = (noise
 								.GetNoise(noisePos.getX(), noisePos.getZ(), worldgenregion.getSeed() ^ ~2) + 1) * scale;
 
-							int miny = OceanWorldsOptions.shouldFloodCaves() ? chunk.getMinBuildHeight()
-									: chunk.getHeight(Heightmap.Types.WORLD_SURFACE, noisePos.getX(), noisePos.getZ());
-							for (int y = miny; y <= height + (int) Math.ceil(extra); y++) {
+							for (int y = height + (int) Math.ceil(extra); y >= chunk.getMinBuildHeight(); y--) {
 								BlockPos pos = noisePos.above(y);
 								BlockState state = worldgenregion.getBlockState(pos);
 
@@ -106,7 +104,7 @@ public class ChunkStatusMixin {
 									worldgenregion
 										.setBlock(pos, state.setValue(BlockStateProperties.WATERLOGGED, true),
 											Block.UPDATE_NONE, 0);
-								}
+								} else if (!OceanWorldsOptions.shouldFloodCaves()) break;
 							}
 						}
 					}
